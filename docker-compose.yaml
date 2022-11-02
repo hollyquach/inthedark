@@ -1,0 +1,28 @@
+services:
+  core:
+    build:
+      context: ./core
+      dockerfile: ./Dockerfile.dev
+    environment:
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./core:/app
+    # networks:
+    #   - front-tier
+    #   - back-tier
+    # configs:
+    #   - httpd-config
+    # secrets:
+    #   - server-certificate
+
+  react:
+    image: node:latest
+    command: npm start
+    working_dir: /app
+    volumes:
+      - "./gui:/app"
+    ports:
+      - "3000:3000"
