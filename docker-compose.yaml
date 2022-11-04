@@ -10,14 +10,6 @@ services:
       - "8000:8000"
     volumes:
       - ./core:/app
-    # networks:
-    #   - front-tier
-    #   - back-tier
-    # configs:
-    #   - httpd-config
-    # secrets:
-    #   - server-certificate
-
   react:
     image: node:latest
     command: npm start

@@ -1,13 +1,13 @@
 from django.views.decorators.http import require_http_methods
 
 
-# from django.http import JsonResponse
-# import requests
-# import os
+""" from django.http import JsonResponse
+import requests
+import os
 
-# from oauthlib.oauth2 import BackendApplicationClient
-# from requests_oauthlib import OAuth2Session
-
+from oauthlib.oauth2 import BackendApplicationClient
+from requests_oauthlib import OAuth2Session
+ """
 
 #> create search encoder
 #   ?? artists.items.genres/id/images.url/name/uri
