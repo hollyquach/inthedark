@@ -6,8 +6,9 @@ services:
     environment:
       SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
       SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      CORE_URI: ${CORE_URI}
     ports:
-      - "8000:8000"
+      - "8080:8000"
     volumes:
       - ./core:/app
   react:
