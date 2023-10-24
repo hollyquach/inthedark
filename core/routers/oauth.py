@@ -3,6 +3,7 @@ from fastapi import APIRouter, Response, Request
 from fastapi.responses import RedirectResponse
 from requests_oauthlib import OAuth2Session
 from requests.auth import HTTPBasicAuth
+import requests
 
 router = APIRouter()
 
@@ -25,27 +26,35 @@ scope = [
     "user-read-email",
     "playlist-read-collaborative"
 ]
-
+auth_state = "auth_state"
 
 spotify = OAuth2Session(client_id, scope=scope, redirect_uri=redirect_uri)
 
-#>> request user auth -> redirect URI
+#>> request user auth -> redirects user to allow authorization on Spotify
 @router.get("/login")
 async def user_auth_redirect(response: Response):
     authorization_url, state = spotify.authorization_url(spotify_auth_url)
     response = RedirectResponse(url= authorization_url)
+
+    response.set_cookie(key=auth_state, value=state)
+    #[] Set up catch for error if auth is not granted
     return response
 
-#>> user auth callback & get user token
+#>> user auth callback & get access token
 @router.get("/callback")
 def callback(request: Request, response: Response):
     code = request.query_params.get('code')
     state = request.query_params.get('state')
 
-    print(f'💬💬  >>> {code} // {state}')
+    #[] Set up PKCE extension
+    auth = HTTPBasicAuth(client_id, client_secret)
+    
+    if state != request.cookies.get(auth_state) or state == None:
+        raise HTTPException(status_code=403, detail="OAuth - state mismatch")
+    else:
+        token = spotify.fetch_token(spotify_token_url, auth=auth, code=code)
+        return token
 
-    # [] request access / bearer token
-    # auth = HTTPBasicAuth(client_id, client_secret)
-    # token = spotify.fetch_token(spotify_token_url, auth=auth, authorization_response=redirect_response)
-
-    # [] set up Sessions to store access & refresh token per user
+#[] set up session/cookies to store access & refresh token per user
+# NOTE Spotify token expires in 3600 aka 60 minutes
+ 
