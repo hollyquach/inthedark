@@ -13,9 +13,9 @@ services:
       - ./core:/app
   react:
     image: node:latest
-    command: npm start
+    command: /bin/bash run.sh
     working_dir: /app
     volumes:
-      - "./gui:/app"
+      - ./gui:/app
     ports:
       - "3000:3000"
